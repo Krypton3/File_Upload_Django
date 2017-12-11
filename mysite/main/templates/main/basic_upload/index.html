@@ -1,0 +1,46 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block title %}Upload{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/jquery-file-upload/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/jquery.fileupload.js' %}"></script>
+
+<script src="{% static 'main/js/basic-upload.js' %}"></script>
+{% endblock %}
+
+{% block files_content %}
+<div style="margin-bottom: 20px;">
+    <button type="button" class="btn btn-primary js-upload-photos"> Upload Files</button>
+    <input id="fileupload" type="file" name="file" multiple
+           style="display: none;"
+           data-url="{% url 'main:upload' %}"
+           data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+</div>
+<di>
+    <form method="post" action="{% url 'main:clear_database' %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit" class="btn btn-danger pull-right"> Delete Files
+        </button>
+    </form>
+</di>
+
+<table id="gallery" class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Files Details</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for f in Obj %}
+    <tr>
+        <td><a href="{{ f.file.url }}">{{ f.file.name }}</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
